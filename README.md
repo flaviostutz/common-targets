@@ -52,6 +52,10 @@ Common set of commands to be used among projects in different languages/structur
       - for a business softwares, you can use STAGE=tst to deploy to your test environment on the cloud, "acc" to acceptance and "prd" to production
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
+- "start"
+  - runs the software locally
+  - examples: runs the jupyter notebook used by data scientists, runs a NodeJS service exposing APIs locally during development, runs React server and opens the page on the browser in developer mode
+
 - "clean"
   - cleans up any temporary or transient files created during build/lint/test so we can perform clean operations if needed
   - example: remove node_modules dirs in JS, delete virtual environments in Python, delete generated binaries in Golang, delete generated files in NextJS
