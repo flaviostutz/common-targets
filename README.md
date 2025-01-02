@@ -21,7 +21,7 @@ make lint
 STAGE=dev make deploy
 
 # delete any temporary files created during the build/test/lint/deploy phases
-make cleanup
+make clean
 ```
 
 # Spec
@@ -115,6 +115,14 @@ In order to have a common entry point for commands regardless of the developer b
 - automated CI pipelines should invoke the makefile scripts in order to perform those tasks
 - when a new developer checkouts the project, he/she can directly run "make build" in order to build the project, or "make test" to run unit tests
 
+### Monorepos
+
+When using common-targets in a monorepo you should scope the commands to different branches of folders. 
+- Inside each module of the monorepo, you will have a Makefile with build/test/lint targets specific for the module itself, but you can have other Makefiles that groups modules on the monorepo if they are in a higher hirarchy folder.
+- For example, if placing it on the root of the monorepo, "build" should build all modules on the monorepo (by invoking "make build" on each module). Check the /examples folder for more details.
+
 ## Examples
 
 TODO
+
+Check [/examples](/examples) folder for more
