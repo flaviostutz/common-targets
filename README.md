@@ -1,5 +1,29 @@
 # common-targets
+
 Common set of commands to be used among projects in different languages/structures for the sake of sanity of the developer
+
+If a project is using the practices defined in **common-targets**, you can check it out, open a shell terminal and run
+
+```
+# install the required development tools for the project
+make prepare
+
+# build the software
+make build
+
+# run unit tests
+make test
+
+# check code style and security findings
+make lint
+
+# deploy the software to dev environment
+STAGE=dev make deploy
+
+# delete any temporary files created during the build/test/lint/deploy phases
+make cleanup
+``
+
 
 ## Problem
 
@@ -52,6 +76,11 @@ Common set of commands to be used among projects in different languages/structur
       - for a business softwares, you can use STAGE=tst to deploy to your test environment on the cloud, "acc" to acceptance and "prd" to production
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
+- "undeploy"
+  - deactivates/uninstall/removes the software from an environment
+  - useful for deleting temporary deployments such as PR environments
+  - use ENV variable "STAGE" in the same manner as in "deploy" command
+
 - "start"
   - runs the software locally
   - examples: runs the jupyter notebook used by data scientists, runs a NodeJS service exposing APIs locally during development, runs React server and opens the page on the browser in developer mode
@@ -75,6 +104,7 @@ Common set of commands to be used among projects in different languages/structur
 - examples:
   - "build-dev" - prepares a build for STAGE=dev
   - "test-smoke" - performs unit tests only on a few important files
+  - "start-debugger" - opens a visual debugger on the browser
 
 ### Use of Makefiles
 
