@@ -22,8 +22,9 @@ STAGE=dev make deploy
 
 # delete any temporary files created during the build/test/lint/deploy phases
 make cleanup
-``
+```
 
+# Spec
 
 ## Problem
 
