@@ -1,2 +1,85 @@
 # common-targets
 Common set of commands be used among projects in different languages/structures for the sake of sanity of the developer
+
+## Problem
+
+- Software projects have different folder and management structures
+- This is even more complicated when you are dealing with different language or tooling ecossystems, making it difficult for new developers of a project to onboard, because they have to learn again and again how to setup their machine and run the software as they move from one project to the other.
+- In best case scenario, those projects have good README or CONTRIBUTING files with good setup instructions, but still the diversity of commands to perform similar tasks among projects is still high.
+- As each project/setup is different, the CI pipelines used on each software development is also very different
+
+## Context
+
+- On the other hand, we can see a lot of similarities in the basics of software development, regardless of language/tooling/ecossystem/complexity/platform
+- Almost every software needs to be **built**, **tested**, **linted**, **deployed** in different environments and the developer sometimes needs extra setups on their laptops to start working on it
+ 
+## Solution
+
+- Standarlise a common set of commands that can be used by the developers in any project and by CI pipelines
+
+## Proposal
+
+### Command list
+
+- "prepare"
+  - installs (or checks) any tools required on the developer machine to build this software (such as nvm, brew, python, golang etc)
+  - normally this operation is done once by the developer for an specific project
+
+- "build"
+  - install any dependencies of the modules
+  - make any post setups required for the software to work
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+ 
+- "lint"
+  - performs code style checks, code/dependency security checks, project structure checks etc
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+ 
+- "test"
+  - runs all required unit tests
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "test-integration"
+  - runs all required integration tests
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "deploy"
+  - publishes this software to an environment
+  - if this is a reusable library, publishes it to the registry (such as pypi, npm, golang etc)
+  - if this is a business software, provision it on the running environment (such as a cloud provider, target on-premisse server, desktop machine)
+  - use ENV variable "STAGE" to define which stage this should be deployed to
+    - For example:
+      - for a library, you can use the hint from STAGE=dev to auto version and publish the library as "1.0.0-alpha", if it's "acc" to "1.0.0-rc" and "prd" to "1.0.0"
+      - for a business softwares, you can use STAGE=tst to deploy to your test environment on the cloud, "acc" to acceptance and "prd" to production
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "clean"
+  - cleans up any temporary or transient files created during build/lint/test so we can perform clean operations if needed
+  - example: remove node_modules dirs in JS, delete virtual environments in Python, delete generated binaries in Golang, delete generated files in NextJS
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+### ENV variables
+
+- "STAGE"
+  - should have the format "[prefix][-variant?]"
+  - commonly used prefixes are: "dev", "tst", "acc", "prd", but you can extend this
+  - examples: "dev", "dev-pr123", "tst", "prd-blue", "prd-green"
+  - this env var can be required to be set in the context of any command (for example, if you need the "STAGE" name when building a package, or wants to apply a different set of linting rules depending on the ENV that the package is being prepared)
+
+#### Extensions
+
+- You can add custom extra commands prefixed by the default names in order to achieve specific requirements, still making it intuitive for the developer
+- examples:
+  - "build-dev" - prepares a build for STAGE=dev
+  - "test-smoke" - performs unit tests only on a few important files
+
+### Use of Makefiles
+
+In order to have a common entry point for commands regardless of the developer background, it's adviseable to use Makefiles. It means that:
+
+- every project should have a Makefile in its root folder with the standard targets (build/lint/test/deploy etc)
+- automated CI pipelines should invoke the makefile scripts in order to perform those tasks
+- when a new developer checkouts the project, he/she can directly run "make build" in order to build the project, or "make test" to run unit tests
+
+## Examples
+
+TODO
