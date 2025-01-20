@@ -11,7 +11,7 @@ make prepare
 # build the software
 make build
 
-# run unit tests
+# run all tests (unit and e2e/integration tests)
 make test
 
 # check code style and security findings
@@ -59,12 +59,21 @@ make clean
   - performs code style checks, code/dependency security checks, project structure checks etc
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
  
+- "lint-fix"
+  - performs automatic fixes according to formatting or linting rules, if possible
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+ 
 - "test"
-  - runs all required unit tests
+  - runs all required tests
+  - internally might invoke test-unit and test-integration, for example.
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
 - "test-integration"
   - runs all required integration tests
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "test-unit"
+  - runs all required unit tests
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
 - "deploy"
