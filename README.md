@@ -49,53 +49,63 @@ make clean
 - "prepare"
   - installs (or checks) any tools required on the developer machine to build this software (such as nvm, brew, python, golang etc)
   - normally this operation is done once by the developer for an specific project
+  - in CI environment, normally those tools are provided by the running machine, or provisioned via specific tasks (such as GH Actions for NPM etc)
 
 - "build"
-  - install any dependencies of the modules, compile and prepare the final package to be released
+  - install any dependencies of the modules, compile and prepare a package of the software
   - make any post setups required for the software to work
+  - a common "build" workflow consists of "install -> compile -> package"
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "install"
+  - download and install all project dependencies (libraries or tools) required for the project to be built
+  - depends on OS to have the basic language tools installed (normally via "prepare")
 
 - "compile"
   - compiles the software into binaries
-  - normally part of the "build" target workflow
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on all tools and dependencies to be installed already (normally via "install")
 
 - "package"
-  - creates a package of the software to be released
+  - creates a package of the software (without proper versioning or change log cautions)
+  - useful to verify if the packaging process is working during development phases
   - normally part of the "build" target workflow
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on software to be compiled already (normally via "compile")
 
+- "release"
+  - create packages prepared to be published to different package registries or cloud resource providers
+  - define next version of the software, prepare release notes, change logs or tag resources
+  - normally uses git tags and semantic versioning to define automatically the next version of the software
+  - depends on software to be compiled already (normally via "compile")
+  
 - "lint"
   - performs code style checks, code/dependency security checks, project structure checks etc
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on dependencies and tools to be installed already (normally via "install")
  
 - "lint-fix"
   - performs automatic fixes according to formatting or linting rules, if possible
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on dependencies and tools to be installed already (normally via "install")
  
 - "test"
   - runs all required tests
-  - internally might invoke test-unit and test-integration, for example.
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - normally will invoke "test-unit" and "test-integration" to verify all test requirements
+  - depends on dependencies and tools to be installed already (normally via "install")
 
 - "test-integration"
   - runs all required integration tests
-  - normally part of the "test" target workflow
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on dependencies and tools to be installed already (normally via "install")
 
 - "test-unit"
   - runs all required unit tests
-  - normally part of the "test" target workflow
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+  - depends on dependencies and tools to be installed already (normally via "install")
+
+- "publish"
+  - uploads the versioned software package to all registries it's supposed to be release, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
+  - depends on a package be prepared with proper release notes and versioning (normally via "release")
 
 - "deploy"
-  - publishes this software to an environment
-  - if this is a reusable library, publishes it to the registry (such as pypi, npm, golang etc)
-  - if this is a business software, provision it on the running environment (such as a cloud provider, target on-premisse server, desktop machine)
+  - provision this software on a running environment (such as a cloud provider, target on-premisse server, desktop machine)
   - use ENV variable "STAGE" to define which stage this should be deployed to
-    - For example:
-      - for a library, you can use the hint from STAGE=dev to auto version and publish the library as "1.0.0-alpha", if it's "acc" to "1.0.0-rc" and "prd" to "1.0.0"
-      - for a business softwares, you can use STAGE=tst to deploy to your test environment on the cloud, "acc" to acceptance and "prd" to production
+    - For example: you can use STAGE=tst to deploy to your test environment on the cloud, "acc" to acceptance and "prd" to production
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
 - "undeploy"
