@@ -17,6 +17,9 @@ make test
 # check code style and security findings
 make lint
 
+# automatically version package and publish to npm registry, for example
+make publish
+
 # deploy the software to dev environment
 STAGE=dev make deploy
 
@@ -44,7 +47,7 @@ make clean
 
 ## Proposal
 
-### Command list
+### Target list
 
 - "prepare"
   - installs (or checks) any tools required on the developer machine to build this software (such as nvm, brew, python, golang etc)
@@ -97,6 +100,10 @@ make clean
 - "test-unit"
   - runs all required unit tests
   - depends on dependencies and tools to be installed already (normally via "install")
+
+- "all"
+  - run build, lint, test and other checks necessary to verify that this software complies with minimum quality standards
+  - useful for the developer to do a fast check on the software before pushing to the repo
 
 - "publish"
   - uploads the versioned software package to all registries it's supposed to be release, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
