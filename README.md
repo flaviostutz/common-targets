@@ -106,7 +106,7 @@ make clean
   - useful for the developer to do a fast check on the software before pushing to the repo
 
 - "publish"
-  - uploads the versioned software package to all registries it's supposed to be release, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
+  - uploads the versioned software package to the registries it's supposed to be released, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
   - depends on a package be prepared with proper release notes and versioning (normally via "release")
 
 - "deploy"
@@ -143,6 +143,7 @@ make clean
 - examples:
   - "build-dev" - prepares a build for STAGE=dev
   - "test-smoke" - performs unit tests only on a few important files
+  - "publish-npm" - publishes 
   - "start-debugger" - opens a visual debugger on the browser
 
 ### Use of Makefiles
