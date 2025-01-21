@@ -51,10 +51,20 @@ make clean
   - normally this operation is done once by the developer for an specific project
 
 - "build"
-  - install any dependencies of the modules
+  - install any dependencies of the modules, compile and prepare the final package to be released
   - make any post setups required for the software to work
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
- 
+
+- "compile"
+  - compiles the software into binaries
+  - normally part of the "build" target workflow
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "package"
+  - creates a package of the software to be released
+  - normally part of the "build" target workflow
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
 - "lint"
   - performs code style checks, code/dependency security checks, project structure checks etc
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
@@ -70,10 +80,12 @@ make clean
 
 - "test-integration"
   - runs all required integration tests
+  - normally part of the "test" target workflow
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
 - "test-unit"
   - runs all required unit tests
+  - normally part of the "test" target workflow
   - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
 
 - "deploy"
