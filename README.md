@@ -8,7 +8,7 @@ If a project is using the practices defined in **common-targets**, you can check
 # install the required development tools for the project
 make prepare
 
-# build the software
+# build the software (compile and produce a development package of the software)
 make build
 
 # run all tests (unit and e2e/integration tests)
@@ -17,7 +17,11 @@ make test
 # check code style and security findings
 make lint
 
-# automatically version package and publish to npm registry, for example
+# auto generate documentation, changelogs, autogenerate next version (or use env var VERSION), tag repo
+# and create a release package ready to be published or deployed
+make release
+
+# publish a release to a registry (e.g.: npm)
 make publish
 
 # deploy the software to dev environment
@@ -69,16 +73,16 @@ make clean
   - depends on all tools and dependencies to be installed already (normally via "install")
 
 - "package"
-  - creates a package of the software (without proper versioning or change log cautions)
-  - useful to verify if the packaging process is working during development phases
-  - normally part of the "build" target workflow
-  - depends on software to be compiled already (normally via "compile")
-
+  - creates a package of the software based on compiled files and other resources, not necessarily a "release package"
+  - useful to verify if the packaging process is working during development phases, but also produces final versioned packages
+  - normally part of the "build" and "release" target workflow
+  - use env var VERSION to define explicitelly the version of the package being produced
+  
 - "release"
-  - create packages prepared to be published to different package registries or cloud resource providers
-  - define next version of the software, prepare release notes, change logs or tag resources
-  - normally uses git tags and semantic versioning to define automatically the next version of the software
-  - depends on software to be compiled already (normally via "compile")
+  - creates packages prepared to be published to different package registries or cloud resource providers
+  - define version of the software, autogenerate documentation, prepare release notes, change logs and/or tag resources
+  - normally uses git tags and semantic versioning to define automatically the next version of the software (e.g.: npm lib monotag)
+  - usually invokes the "package" task to produce the final package
   
 - "lint"
   - performs code style checks, code/dependency security checks, project structure checks etc
@@ -132,10 +136,15 @@ make clean
 ### ENV variables
 
 - "STAGE"
+  - defines the runtime environment of a software
   - should have the format "[prefix][-variant?]"
   - commonly used prefixes are: "dev", "tst", "acc", "prd", but you can extend this
   - examples: "dev", "dev-pr123", "tst", "prd-blue", "prd-green"
   - this env var can be required to be set in the context of any command (for example, if you need the "STAGE" name when building a package, or wants to apply a different set of linting rules depending on the ENV that the package is being prepared)
+
+- "VERSION"
+  - define the version to be used of a package
+  - commonly used in tasks such as "release" to the produced package is prepared to be published with proper versioning (when there is no auto tagging utility in place)
 
 #### Extensions
 
@@ -161,7 +170,5 @@ When using common-targets in a monorepo you should scope the commands to differe
 - For example, if placing it on the root of the monorepo, "build" should build all modules on the monorepo (by invoking "make build" on each module). Check the /examples folder for more details.
 
 ## Examples
-
-TODO
 
 Check [/examples](/examples) folder for more
