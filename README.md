@@ -136,17 +136,17 @@ Those groups should comprise most of the tasks throughout the software lifecycle
 #### release group
 
 - "release"
-  - generated a versioned package of the software ready to be published or deployed
-  - a common workflow is "docgen -> version -> package"
-
-- "docgen"
-  - generate documentation like api docs, examples, static websites etc
+  - generates a versioned package of the software ready to be published or deployed
+  - a common workflow is "version -> docgen -> package"
+  - use env var VERSION to define the version manually
 
 - "version"
   - defines next version of the software, prepare release notes, generate changelogs, tag resources
   - normally uses git tags and semantic versioning to define automatically the next version of the software (e.g.: npx monotag)
-  - use env var VERSION to define the version manually
   
+- "docgen"
+  - generate documentation like api docs, examples, static websites etc
+
 - "publish"
   - uploads the versioned software package to the registries it's supposed to be released, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
   - depends on a package be prepared with proper release notes and versioning (normally via "release")
