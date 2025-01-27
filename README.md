@@ -51,12 +51,42 @@ make clean
 
 ## Proposal
 
+The targets are grouped into
+
+- **Build** - installation of dependencies, compiling, packaging etc
+- **Lint** - checks on code style, formatting, code smells, best practices, outdated libraries, security checks etc
+- **Test** - unit tests, integration tests and other tests on software
+- **Release** - documentation generation, changelog, version definition, versioned packaging, publishing to registry, deployment to runtime environment
+- **Developer** - tool installation on the developer machine, lockfile update etc
+
+Those groups should comprise most of the tasks throughout the software lifecycle.
+
 ### Target list
+
+#### developer
 
 - "prepare"
   - installs (or checks) any tools required on the developer machine to build this software (such as nvm, brew, python, golang etc)
   - normally this operation is done once by the developer for an specific project
   - in CI environment, normally those tools are provided by the running machine, or provisioned via specific tasks (such as GH Actions for NPM etc)
+
+- "all"
+  - run build, lint, test and other checks necessary to verify that this software complies with minimum quality standards
+  - useful for the developer to do a fast check on the software before pushing to the repo
+
+- "clean"
+  - cleans up any temporary or transient files created during build/lint/test so we can perform clean operations if needed
+  - example: remove node_modules dirs in JS, delete virtual environments in Python, delete generated binaries in Golang, delete generated files in NextJS
+  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
+
+- "start"
+  - runs the software locally
+  - examples: runs the jupyter notebook used by data scientists, runs a NodeJS service exposing APIs locally during development, runs React server and opens the page on the browser in developer mode
+
+- "update-lockfile"
+  - update the file that defines the specific version of all dependencies used during dep installs
+
+#### build
 
 - "build"
   - install any dependencies of the modules, compile and prepare a package of the software
@@ -77,13 +107,9 @@ make clean
   - useful to verify if the packaging process is working during development phases, but also produces final versioned packages
   - normally part of the "build" and "release" target workflow
   - use env var VERSION to define explicitelly the version of the package being produced
-  
-- "release"
-  - creates packages prepared to be published to different package registries or cloud resource providers
-  - define version of the software, autogenerate documentation, prepare release notes, change logs and/or tag resources
-  - normally uses git tags and semantic versioning to define automatically the next version of the software (e.g.: npm lib monotag)
-  - usually invokes the "package" task to produce the final package
-  
+
+#### lint
+
 - "lint"
   - performs code style checks, code/dependency security checks, project structure checks etc
   - depends on dependencies and tools to be installed already (normally via "install")
@@ -91,7 +117,9 @@ make clean
 - "lint-fix"
   - performs automatic fixes according to formatting or linting rules, if possible
   - depends on dependencies and tools to be installed already (normally via "install")
- 
+
+#### test
+
 - "test"
   - runs all required tests
   - normally will invoke "test-unit" and "test-integration" to verify all test requirements
@@ -105,14 +133,24 @@ make clean
   - runs all required unit tests
   - depends on dependencies and tools to be installed already (normally via "install")
 
-- "all"
-  - run build, lint, test and other checks necessary to verify that this software complies with minimum quality standards
-  - useful for the developer to do a fast check on the software before pushing to the repo
+#### release
 
+- "release"
+  - generated a versioned package of the software ready to be published or deployed
+  - a common workflow is "docgen -> version -> package"
+
+- "docgen"
+  - generate documentation like api docs, examples, static websites etc
+
+- "version"
+  - defines next version of the software, prepare release notes, generate changelogs, tag resources
+  - normally uses git tags and semantic versioning to define automatically the next version of the software (e.g.: npx monotag)
+  - use env var VERSION to define the version manually
+  
 - "publish"
   - uploads the versioned software package to the registries it's supposed to be released, such as pypi, npm, DockerHub, GitHub Releases, Blob Storage etc
   - depends on a package be prepared with proper release notes and versioning (normally via "release")
-
+  
 - "deploy"
   - provision this software on a running environment (such as a cloud provider, target on-premisse server, desktop machine)
   - use ENV variable "STAGE" to define which stage this should be deployed to
@@ -124,15 +162,6 @@ make clean
   - useful for deleting temporary deployments such as PR environments
   - use ENV variable "STAGE" in the same manner as in "deploy" command
 
-- "start"
-  - runs the software locally
-  - examples: runs the jupyter notebook used by data scientists, runs a NodeJS service exposing APIs locally during development, runs React server and opens the page on the browser in developer mode
-
-- "clean"
-  - cleans up any temporary or transient files created during build/lint/test so we can perform clean operations if needed
-  - example: remove node_modules dirs in JS, delete virtual environments in Python, delete generated binaries in Golang, delete generated files in NextJS
-  - used both by the developer on his/her machine during development and by automated CI pipelines to enhance consintence
-
 ### ENV variables
 
 - "STAGE"
@@ -143,8 +172,8 @@ make clean
   - this env var can be required to be set in the context of any command (for example, if you need the "STAGE" name when building a package, or wants to apply a different set of linting rules depending on the ENV that the package is being prepared)
 
 - "VERSION"
-  - define the version to be used of a package
-  - commonly used in tasks such as "release" to the produced package is prepared to be published with proper versioning (when there is no auto tagging utility in place)
+  - define the version to be used during packaging and deploy
+  - commonly used in tasks such as "release" so the produced package is prepared to be published with proper versioning (when there is no auto tagging utility in place)
 
 #### Extensions
 
@@ -160,7 +189,7 @@ make clean
 In order to have a common entry point for commands regardless of the developer background, it's adviseable to use Makefiles. It means that:
 
 - every project should have a Makefile in its root folder with the standard targets (build/lint/test/deploy etc)
-- automated CI pipelines should invoke the makefile scripts in order to perform those tasks
+- automated CI pipelines should invoke the makefile scripts in order to perform those tasks so that a very similar set of scripts are run during CI and development runs
 - when a new developer checkouts the project, he/she can directly run "make build" in order to build the project, or "make test" to run unit tests
 
 ### Monorepos
