@@ -63,7 +63,7 @@ Those groups should comprise most of the tasks throughout the software lifecycle
 
 ### Target list
 
-#### developer
+#### developer group
 
 - "prepare"
   - installs (or checks) any tools required on the developer machine to build this software (such as nvm, brew, python, golang etc)
@@ -86,7 +86,7 @@ Those groups should comprise most of the tasks throughout the software lifecycle
 - "update-lockfile"
   - update the file that defines the specific version of all dependencies used during dep installs
 
-#### build
+#### build group
 
 - "build"
   - install any dependencies of the modules, compile and prepare a package of the software
@@ -108,7 +108,7 @@ Those groups should comprise most of the tasks throughout the software lifecycle
   - normally part of the "build" and "release" target workflow
   - use env var VERSION to define explicitelly the version of the package being produced
 
-#### lint
+#### lint group
 
 - "lint"
   - performs code style checks, code/dependency security checks, project structure checks etc
@@ -118,7 +118,7 @@ Those groups should comprise most of the tasks throughout the software lifecycle
   - performs automatic fixes according to formatting or linting rules, if possible
   - depends on dependencies and tools to be installed already (normally via "install")
 
-#### test
+#### test group
 
 - "test"
   - runs all required tests
@@ -133,7 +133,7 @@ Those groups should comprise most of the tasks throughout the software lifecycle
   - runs all required unit tests
   - depends on dependencies and tools to be installed already (normally via "install")
 
-#### release
+#### release group
 
 - "release"
   - generated a versioned package of the software ready to be published or deployed
