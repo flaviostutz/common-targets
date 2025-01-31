@@ -19,7 +19,7 @@ make lint
 
 # auto generate documentation, changelogs, autogenerate next version (or use env var VERSION), tag repo
 # and create a release package ready to be published or deployed
-make release
+make release package
 
 # publish a release to a registry (e.g.: npm)
 make publish
